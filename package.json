@@ -1,5 +1,5 @@
 {
-  "name": "@pabloszx/userememberstate",
+  "name": "use-remember-state",
   "version": "0.1.0",
   "repository": "git://github.com/PabloSzx/useRememberState.git",
   "license": "MIT",
@@ -11,6 +11,7 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "build": "tsdx build",
+    "prepublishOnly": "tsdx build",
     "start": "tsdx watch",
     "test": "tsdx test --env=jsdom"
   },
