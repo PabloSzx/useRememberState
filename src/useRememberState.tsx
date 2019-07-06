@@ -22,6 +22,10 @@ function useRememberState<T = string>(
   );
 
   useEffect(() => {
+    setState(getLocalStorage(consistentName, defaultValue));
+  }, []);
+
+  useEffect(() => {
     setLocalStorage<T>(state, consistentName);
   }, [state]);
 
