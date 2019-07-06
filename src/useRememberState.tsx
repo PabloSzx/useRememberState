@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const checkLocalStorage = () => typeof localStorage !== undefined;
+const checkLocalStorage = () => typeof localStorage !== 'undefined';
 
 function getLocalStorage<T = string>(name: string, defaultV: T) {
   if (checkLocalStorage()) {
@@ -17,7 +17,7 @@ function useRememberState<T = string>(
   consistentName: string,
   defaultValue: T
 ): [T, React.Dispatch<React.SetStateAction<T>>] {
-  const [state, setState] = useState<T>(
+  const [state, setState] = useState<T>(() =>
     getLocalStorage<T>(consistentName, defaultValue)
   );
 
