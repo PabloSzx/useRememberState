@@ -17,7 +17,7 @@ function useRememberState<T = string>(
   consistentName: string,
   defaultValue: T
 ): [T, React.Dispatch<React.SetStateAction<T>>] {
-  const [state, setState] = useState<T>(() =>
+  const [state, setState] = useState<T>(
     getLocalStorage<T>(consistentName, defaultValue)
   );
 
