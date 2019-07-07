@@ -9,16 +9,18 @@ function getLocalStorage<T = string>(name: string, defaultV: T) {
   }
   return defaultV;
 }
+
 function setLocalStorage<T = string>(v: T, name: string) {
   if (checkLocalStorage()) localStorage.setItem(name, JSON.stringify(v));
 }
 
 function useRememberState<T = string>(
   consistentName: string,
-  defaultValue: T
+  defaultValue: T,
+  SSR: boolean = false
 ): [T, React.Dispatch<React.SetStateAction<T>>] {
   const [state, setState] = useState<T>(() =>
-    getLocalStorage<T>(consistentName, defaultValue)
+    SSR ? defaultValue : getLocalStorage<T>(consistentName, defaultValue)
   );
 
   useEffect(() => {

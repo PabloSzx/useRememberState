@@ -54,6 +54,12 @@ Keep in mind that the name should be **unique** around the app.
 
 For server side rendering the default value is only going to be used for the first render, but after the component is mounted on the browser, it will try to fetch again to **localStorage** looking for the data.
 
+### SSR
+
+If you still have some problems with inconsistencies between server and client side, like _prop 'className' did not match_, you can use an optional third argument:
+
+- useRememberState(_name_, _defaultValue_, **true**)
+
 ## License
 
 The MIT License (MIT)
