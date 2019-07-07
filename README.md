@@ -1,148 +1,71 @@
-# TSDX React User Guide
+# useRememberState
 
-Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
+[![github-version](https://badgen.net/github/release/PabloSzx/useRememberState)](https://github.com/PabloSzx/useRememberState)
+[![npm-version](https://badgen.net/npm/v/use-remember-state)](https://www.npmjs.com/package/use-remember-state)
+[![install-size](https://badgen.net/packagephobia/install/use-remember-state)](https://www.npmjs.com/package/use-remember-state)
+[![publish-size](https://badgen.net/packagephobia/publish/use-remember-state)](https://www.npmjs.com/package/use-remember-state)
 
-> This TSDX setup is meant for developing React components (not apps!) that can be published to NPM. If you’re looking to build an app, you should use `create-react-app`, `razzle`, `nextjs`, `gatsby`, or `react-static`.
+React Hook designed to extend the **useState** hook using **localStorage** as the persistance method on the browser, ready for **TypeScript** environments too.
 
-> If you’re new to TypeScript and React, checkout [this handy cheatsheet](https://github.com/sw-yx/react-typescript-cheatsheet/)
+## Installation
 
-## Commands
-
-TSDX scaffolds your new library inside `/src`, and also sets up a [Parcel-based](https://parceljs.org) playground for it inside `/example`.
-
-The recommended workflow is to run TSDX in one terminal:
-
-```
-npm start # or yarn start
+```bash
+yarn add use-remember-state
 ```
 
-This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
+or
 
-Then run the example inside another:
-
-```
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
+```bash
+npm install --save use-remember-state
 ```
 
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**, [we use Parcel's aliasing](https://github.com/palmerhq/tsdx/pull/88/files).
+## Why
 
-To do a one-off build, use `npm run build` or `yarn build`.
+---
 
-To run tests, use `npm test` or `yarn test`.
+When you use **useState** you need to give a _default value_, usually it's just used as a placeholder, but what if you want that value to be data you already put before?, the common solution is use the _default value_ calling **localStorage.getItem(_name_)**, but of course you need to call **localStorage.setItem(_name_, _value_)** before, and this call should be handled everytime the value you want to save is changed. And you have to keep in mind that if you have **SSR** implemented, there is no **localStorage** on the server, so you need fallbacks, so clearly it just becomes a nightmare and tons of repetitive code.
 
-## Configuration
+All that problem is solved using the custom hook **useRememberState**
 
-Code quality is [set up for you](https://github.com/palmerhq/tsdx/pull/45/files) with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
+## Usage
 
-### Jest
+---
 
-Jest tests are set up to run with `npm test` or `yarn test`. This runs the test watcher (Jest) in an interactive mode. By default, runs tests related to files changed since the last commit.
+The return values from the hook are exactly the same as **useState**, but the arguments should be first a **consistent name** which is going to be used as **key** for **localStorage**, and after that a **default value**, which is going to be used as fallback for the first time render or server side rendering.
 
-#### Setup Files
+```tsx
+import React, { FunctionComponent } from 'react';
+import { useRememberState } from 'use-remember-state';
 
-This is the folder structure we set up for you:
+const HelloWorld: FunctionComponent = () => {
+  const [data, setData] = useRememberState('HelloWorldInput', '');
 
-```
-/example
-  index.html
-  index.tsx       # test your component here in a demo app
-  package.json
-  tsconfig.json
-/src
-  index.tsx       # EDIT THIS
-/test
-  blah.test.tsx   # EDIT THIS
-.gitignore
-package.json
-README.md         # EDIT THIS
-tsconfig.json
-```
-
-#### React Testing Library
-
-We do not set up `react-testing-library` for you yet, we welcome contributions and documentation on this.
-
-### Rollup
-
-TSDX uses [Rollup v1.x](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
-
-### TypeScript
-
-`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
-
-## Continuous Integration
-
-### Travis
-
-_to be completed_
-
-### Circle
-
-_to be completed_
-
-## Optimizations
-
-Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
-
-```js
-// ./types/index.d.ts
-declare var __DEV__: boolean;
-
-// inside your code...
-if (__DEV__) {
-  console.log('foo');
-}
+  return (
+    <div>
+      <p>This input remembers the input after every reload</p>
+      <input
+        value={data}
+        onChange={({ target: { value } }) => {
+          setData(value);
+        }}
+      />
+    </div>
+  );
+};
 ```
 
-You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
+Keep in mind that the name should be **unique** around the app.
 
-## Module Formats
+For server side rendering the default value is only going to be used for the first render, but after the component is mounted on the browser, it will try to fetch again to **localStorage** looking for the data.
 
-CJS, ESModules, and UMD module formats are supported.
+## License
 
-The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
+---
 
-## Using the Playground
+The MIT License (MIT)
 
-```
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
-```
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**!
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-## Named Exports
-
-Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
-
-## Including Styles
-
-There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
-
-For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
-
-## Publishing to NPM
-
-We recommend using https://github.com/sindresorhus/np.
-
-## Usage with Lerna
-
-When creating a new package with TSDX within a project set up with Lerna, you might encounter a `Cannot resolve dependency` error when trying to run the `example` project. To fix that you will need to make changes to the `package.json` file _inside the `example` directory_.
-
-The problem is that due to the nature of how dependencies are installed in Lerna projects, the aliases in the example project's `package.json` might not point to the right place, as those dependencies might have been installed in the root of your Lerna project.
-
-Change the `alias` to point to where those packages are actually installed. This depends on the directory structure of your Lerna project, so the actual path might be different from the diff below.
-
-```diff
-   "alias": {
--    "react": "../node_modules/react",
--    "react-dom": "../node_modules/react-dom"
-+    "react": "../../../node_modules/react",
-+    "react-dom": "../../../node_modules/react-dom"
-   },
-```
-
-An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/palmerhq/tsdx/issues/64)
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
