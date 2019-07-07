@@ -21,15 +21,11 @@ npm install --save use-remember-state
 
 ## Why
 
----
-
-When you use **useState** you need to give a _default value_, usually it's just used as a placeholder, but what if you want that value to be data you already put before?, the common solution is use the _default value_ calling **localStorage.getItem(_name_)**, but of course you need to call **localStorage.setItem(_name_, _value_)** before, and this call should be handled everytime the value you want to save is changed. And you have to keep in mind that if you have **SSR** implemented, there is no **localStorage** on the server, so you need fallbacks, so clearly it just becomes a nightmare and tons of repetitive code.
+When you use **useState** you need to give a _default value_, usually it's just used as a placeholder, but what if you want that value to be data you already put before?, the common solution is to use the _default value_ calling **localStorage.getItem(_name_)**, but of course you need to call **localStorage.setItem(_name_, _value_)** before, and this call should be handled everytime the value you want to save is changed. And you have to keep in mind that if you have **SSR** implemented, there is no **localStorage** on the server, so you need fallbacks, so clearly it just becomes a nightmare and tons of repetitive code.
 
 All that problem is solved using the custom hook **useRememberState**
 
 ## Usage
-
----
 
 The return values from the hook are exactly the same as **useState**, but the arguments should be first a **consistent name** which is going to be used as **key** for **localStorage**, and after that a **default value**, which is going to be used as fallback for the first time render or server side rendering.
 
@@ -59,8 +55,6 @@ Keep in mind that the name should be **unique** around the app.
 For server side rendering the default value is only going to be used for the first render, but after the component is mounted on the browser, it will try to fetch again to **localStorage** looking for the data.
 
 ## License
-
----
 
 The MIT License (MIT)
 
