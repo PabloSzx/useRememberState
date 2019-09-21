@@ -1,7 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-
-const useIsomorphicLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+import { useEffect, useRef, useState } from "react";
 
 function getLocalStorage<T>(name: string, defaultV: T) {
   try {
@@ -28,8 +25,8 @@ function useRememberState<T = any>(
     SSR ? defaultValue : getLocalStorage(consistentName, defaultValue)
   );
 
-  useIsomorphicLayoutEffect(() => {
-    setState(getLocalStorage(consistentName, defaultValue));
+  useEffect(() => {
+    if (SSR) setState(getLocalStorage(consistentName, defaultValue));
   }, []);
 
   const isInitialMount = useRef(true);
