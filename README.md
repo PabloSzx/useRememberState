@@ -58,7 +58,7 @@ For server side rendering the default value is only going to be used for the fir
 
 If you still have some problems with inconsistencies between server and client side, like _prop 'className' did not match_, you can use an optional third argument:
 
-- useRememberState(_name_, _defaultValue_, **true**)
+- useRememberState(_name_, _defaultValue_, { SSR: **true** })
 
 ## License
 

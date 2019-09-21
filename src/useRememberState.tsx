@@ -19,7 +19,7 @@ function setLocalStorage<T>(v: T, name: string) {
 function useRememberState<T = any>(
   consistentName: string,
   defaultValue: T,
-  { SSR } = { SSR: false }
+  { SSR }: { SSR?: boolean } = { SSR: false }
 ): [T, React.Dispatch<React.SetStateAction<T>>] {
   const [state, setState] = useState<T>(() =>
     SSR ? defaultValue : getLocalStorage(consistentName, defaultValue)
