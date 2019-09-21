@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 function getLocalStorage<T>(name: string, defaultV: T) {
   try {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const v = localStorage.getItem(name);
       if (v) return JSON.parse(v) as T;
     }
@@ -25,7 +28,7 @@ function useRememberState<T = any>(
     SSR ? defaultValue : getLocalStorage(consistentName, defaultValue)
   );
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     setState(getLocalStorage(consistentName, defaultValue));
   }, []);
 
