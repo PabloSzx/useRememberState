@@ -1,34 +1,42 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-const checkLocalStorage = () => typeof localStorage !== 'undefined';
-
-function getLocalStorage<T = string>(name: string, defaultV: T) {
-  if (checkLocalStorage()) {
-    const v = localStorage.getItem(name);
-    if (v) return JSON.parse(v) as T;
-  }
+function getLocalStorage<T>(name: string, defaultV: T) {
+  try {
+    if (typeof window !== 'undefined') {
+      const v = localStorage.getItem(name);
+      if (v) return JSON.parse(v) as T;
+    }
+  } catch {}
   return defaultV;
 }
 
-function setLocalStorage<T = string>(v: T, name: string) {
-  if (checkLocalStorage()) localStorage.setItem(name, JSON.stringify(v));
+function setLocalStorage<T>(v: T, name: string) {
+  try {
+    localStorage.setItem(name, JSON.stringify(v));
+  } catch {}
 }
 
-function useRememberState<T = string>(
+function useRememberState<T = any>(
   consistentName: string,
   defaultValue: T,
-  SSR: boolean = false
+  { SSR } = { SSR: false }
 ): [T, React.Dispatch<React.SetStateAction<T>>] {
   const [state, setState] = useState<T>(() =>
-    SSR ? defaultValue : getLocalStorage<T>(consistentName, defaultValue)
+    SSR ? defaultValue : getLocalStorage(consistentName, defaultValue)
   );
 
   useEffect(() => {
     setState(getLocalStorage(consistentName, defaultValue));
   }, []);
 
+  const isInitialMount = useRef(true);
+
   useEffect(() => {
-    setLocalStorage<T>(state, consistentName);
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    } else {
+      setLocalStorage(state, consistentName);
+    }
   }, [state]);
 
   return [state, setState];
