@@ -39,6 +39,12 @@ function useRememberState<T = any>(
     }
   }, [state]);
 
+  useEffect(() => {
+    if (!isInitialMount.current) {
+      setState(getLocalStorage(consistentName, defaultValue));
+    }
+  }, [consistentName]);
+
   return [state, setState];
 }
 
