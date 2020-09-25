@@ -1,1 +1,1 @@
-export { default as useRememberState } from './useRememberState';
+export { useRememberState } from "./useRememberState";

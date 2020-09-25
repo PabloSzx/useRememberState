@@ -54,11 +54,21 @@ Keep in mind that the name should be **unique** around the app.
 
 For server side rendering the default value is only going to be used for the first render, but after the component is mounted on the browser, it will try to fetch again to **localStorage** looking for the data.
 
-# SSR
+### SSR
 
-Handling SSR correctly and efficiently with **localStorage** has it's problems, so in order to prevent setting state twice (therefore, rendering an extra time) and at the same time preventing the warning "**_useLayoutEffect does nothing on the server_**" when using SSR you **have to** specify an optional third argument:
+Handling SSR correctly and efficiently with `localStorage` has it's problems, so in order to prevent setting state twice (therefore, rendering an extra time) and at the same time preventing the warning "**_useLayoutEffect does nothing on the server_**" when using SSR you **have to** specify an optional third argument:
 
-- useRememberState(_name_, _defaultValue_, { SSR: **true** })
+```js
+useRememberState(name, defaultValue, { SSR: true });
+```
+
+### Debounce
+
+Accessing `localStorage` is computationally expensive, in order to improve performance all the calls to `localStorage` are [**debounced**](https://css-tricks.com/debouncing-throttling-explained-examples/#debounce), the default amount of delay is `500` _ms_, you can change it to any amount, or set it to `0` to make the calls synchronously.
+
+```js
+useRememberState(name, defaultValue, { debounceWait: 100 });
+```
 
 ## License
 
